@@ -1,3 +1,7 @@
 export default function SignInPage() {
-  return <h2>SignIn Page</h2>;
+  return (
+    <div className="container mx-auto">
+      <h2 className="content-center">SignIn Page</h2>
+    </div>
+  );
 }

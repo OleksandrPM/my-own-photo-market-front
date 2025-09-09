@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ThemeProvider } from "next-themes";
 import "../styles/globals.css";
 import { GeistFont } from "fonts";
 import Header from "components/Header";
@@ -25,13 +26,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${GeistFont.className} antialiased`}>
-        <Header />
-        <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-          {children}
-        </main>
-        <Footer />
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${GeistFont.className} antialiased flex flex-col min-h-svh justify-between`}
+      >
+        <ThemeProvider attribute="data-mode">
+          <Header />
+          <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
+            {children}
+          </main>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -1,10 +1,10 @@
 "use client";
-// import Image from "next/image";
-import { useEffect, useState } from "react";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getHideWelcome, switchHideWelcome } from "lib/localStorage";
 import { useRouter } from "next/navigation";
+// import Image from "next/image";
+import { getHideWelcome, switchHideWelcome } from "lib/localStorage";
 
 export default function HomePage() {
   const [hideWelcome, setHideWelcome] = useState(getHideWelcome());
@@ -22,7 +22,7 @@ export default function HomePage() {
   };
 
   return (
-    <>
+    <div className="container mx-auto">
       <h1>My Own Photo Market</h1>
       <p>
         Welcome to my app, where I’ve combined two of my passions: capturing
@@ -47,9 +47,10 @@ export default function HomePage() {
           checked={hideWelcome}
           onChange={handleCheckboxChange}
           name="hideWelcome"
+          placeholder="Search by tags"
         />
         Don’t show this page again in the future
       </label>
-    </>
+    </div>
   );
 }

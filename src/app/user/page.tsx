@@ -1,3 +1,18 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+
 export default function UserPage() {
-  return <h1>User`s page, need to redirect to signin or signup</h1>;
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push("user/signin");
+  });
+
+  return (
+    <div className="container mx-auto">
+      <h2>User`s page, need to redirect to signin or signup</h2>
+    </div>
+  );
 }
