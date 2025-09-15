@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import { ThemeProvider } from "next-themes";
+// import { ThemeProvider } from "next-themes";
 import "../styles/globals.css";
 import { GeistFont } from "fonts";
 import Header from "components/Header";
 import Footer from "components/Footer";
+// import ThemeSync from "components/ThemeSync";
+import StoreProvider from "components/StoreProvider";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -26,18 +28,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${GeistFont.className} antialiased flex flex-col min-h-svh justify-between`}
-      >
-        <ThemeProvider attribute="data-mode">
+    <StoreProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body
+          className={`${GeistFont.className} antialiased flex flex-col min-h-svh justify-between`}
+        >
           <Header />
           <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
             {children}
           </main>
           <Footer />
-        </ThemeProvider>
-      </body>
-    </html>
+        </body>
+      </html>
+    </StoreProvider>
   );
 }
