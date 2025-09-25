@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-// import { ThemeProvider } from "next-themes";
 import "../styles/globals.css";
 import { GeistFont } from "fonts";
+import StoreProvider from "components/StoreProvider";
 import Header from "components/Header";
 import Footer from "components/Footer";
-// import ThemeSync from "components/ThemeSync";
-import StoreProvider from "components/StoreProvider";
+import LocalPreferencesInitializer from "components/LocalPreferencesInitializer";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -29,6 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <StoreProvider>
+      <LocalPreferencesInitializer />
       <html lang="en" suppressHydrationWarning>
         <body
           className={`${GeistFont.className} antialiased flex flex-col min-h-svh justify-between`}

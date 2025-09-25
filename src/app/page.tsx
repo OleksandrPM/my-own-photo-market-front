@@ -1,24 +1,26 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 // import Image from "next/image";
-import { getHideWelcome, switchHideWelcome } from "lib/localStorage";
+import { useAppDispatch, useAppSelector } from "lib/hooks/react-redux-hooks";
+import { setHideWelcome } from "lib/redux/features/local-preferences/localPreferencesSlice";
+import { getHideWelcome } from "lib/redux/features/local-preferences/localPreferencesSelectors";
 
 export default function HomePage() {
-  const [hideWelcome, setHideWelcome] = useState(getHideWelcome());
+  const isHideWelcome = useAppSelector(getHideWelcome);
+  const dispatch = useAppDispatch();
   const router = useRouter();
 
-  // useEffect(() => {
-  //   if (hideWelcome) {
-  //     router.push("images/");
-  //   }
-  // }, [hideWelcome, router]);
+  useEffect(() => {
+    // if (isHideWelcome) {
+    //   router.push("images/");
+    // }
+  }, [isHideWelcome]);
 
-  const handleCheckboxChange = () => {
-    switchHideWelcome();
-    setHideWelcome(getHideWelcome());
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setHideWelcome(e.target.checked));
   };
 
   return (
@@ -44,13 +46,21 @@ export default function HomePage() {
       <label className="flex items-center gap-2">
         <input
           type="checkbox"
-          checked={hideWelcome}
+          checked={isHideWelcome}
           onChange={handleCheckboxChange}
           name="hideWelcome"
-          placeholder="Search by tags"
         />
         Don’t show this page again in the future
       </label>
     </div>
   );
+}
+
+// delete
+export function deleteStorageByKey(storageKey: string) {
+  if (typeof window === "undefined") return;
+
+  localStorage.removeItem(storageKey);
+
+  return localStorage.getItem(storageKey);
 }

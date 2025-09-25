@@ -1,13 +1,28 @@
-export interface IStorageSettings {
-  hideWelcome?: boolean;
-  controlWord?: string;
+import { LocalPreferencesState } from "types/localPreferencesState";
+
+export const storageKey: string = process.env.LOCAL_STORAGE_KEY || "MyOPM-app";
+
+export function getStorage(): LocalPreferencesState | undefined {
+  if (typeof window === "undefined") return;
+
+  const stored = localStorage.getItem(storageKey);
+
+  if (stored) {
+    try {
+      return JSON.parse(stored);
+    } catch (error) {
+      console.error("Failed to parse localStorage:", error);
+
+      return undefined;
+    }
+  } else {
+    return undefined;
+  }
 }
 
-export const storageKey: string = "MyOPM-app";
-
 export function setStorage(
-  settings: IStorageSettings
-): IStorageSettings | undefined {
+  settings: LocalPreferencesState
+): LocalPreferencesState | undefined {
   if (typeof window === "undefined") return;
 
   localStorage.setItem(storageKey, JSON.stringify(settings));
@@ -35,23 +50,27 @@ export function deleteStorage() {
   return localStorage.getItem(storageKey);
 }
 
-export function setValue<K extends keyof IStorageSettings>(
+// Try do not use this function, work with state, update all the localPreferences object
+export function setStorageValue<K extends keyof LocalPreferencesState>(
   propName: K,
-  value: IStorageSettings[K]
+  value: LocalPreferencesState[K]
 ) {
   if (typeof window === "undefined") return;
 
   const stored = localStorage.getItem(storageKey);
-  const currentSettings: IStorageSettings = stored ? JSON.parse(stored) : {};
+  const currentSettings: LocalPreferencesState = stored
+    ? JSON.parse(stored)
+    : {};
 
   currentSettings[propName] = value;
 
   localStorage.setItem(storageKey, JSON.stringify(currentSettings));
 
-  return getValue(propName);
+  return getStorageValue(propName);
 }
 
-export function getValue<K extends keyof IStorageSettings>(
+// Do not use this function, work with state for getting data
+export function getStorageValue<K extends keyof LocalPreferencesState>(
   propName: K
 ): string | boolean | undefined {
   if (typeof window === "undefined") return;

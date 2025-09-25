@@ -1,28 +1,33 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "lib/hooks/react-redux-hooks";
+import { getTheme } from "lib/redux/features/local-preferences/localPreferencesSelectors";
+import { setTheme } from "lib/redux/features/local-preferences/localPreferencesSlice";
+import { ColorTheme } from "types/colorTheme";
+import setThemeAttribute from "lib/utils/setThemeAttribute";
+import { useSystemThemeListener } from "lib/hooks/useSystemThemeListener";
 
 export function ThemeSwitch() {
-  const [mounted, setMounted] = useState(false);
+  const theme = useAppSelector(getTheme);
+  const dispatch = useAppDispatch();
 
-  // useEffect only runs on the client, so now we can safely show the UI
+  useSystemThemeListener(theme === ColorTheme.SYSTEM);
+
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    setThemeAttribute(theme);
+  }, [theme]);
 
-  if (!mounted) {
-    return null;
-  }
+  const onChangeHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const chosenTheme = event.target.value as ColorTheme;
+    dispatch(setTheme(chosenTheme));
+  };
 
   return (
-    <select
-      // value={theme}
-      // onChange={(e) => setTheme(e.target.value)}
-      title="theme"
-    >
-      <option value="system">System</option>
-      <option value="dark">Dark</option>
-      <option value="light">Light</option>
+    <select value={theme} onChange={onChangeHandler} title="theme">
+      <option value={ColorTheme.LIGHT}>Light</option>
+      <option value={ColorTheme.DARK}>Dark</option>
+      <option value={ColorTheme.SYSTEM}>System</option>
     </select>
   );
 }
