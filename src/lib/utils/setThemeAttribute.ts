@@ -1,10 +1,10 @@
 import { ColorTheme } from "types/colorTheme";
 
-const attribute: string = "data-mode";
+const attribute: string = "data-theme";
 const media: string = "(prefers-color-scheme: dark)";
 
 export default function setThemeAttribute(mode: ColorTheme) {
-  const element = document.body;
+  const element = document.documentElement;
 
   if (mode === ColorTheme.SYSTEM) {
     const isPrefersDark = window.matchMedia(media).matches;
