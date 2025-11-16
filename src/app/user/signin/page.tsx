@@ -6,7 +6,7 @@ export default function SignInPage() {
     <div className="container mx-auto">
       <h2 className="content-center">SignIn Page</h2>
       <p>
-        Don't have an account yet?{" "}
+        Don&apos;t have an account yet?{" "}
         <Link href="/user/signup">Create an account</Link>
       </p>
       <SignInForm />

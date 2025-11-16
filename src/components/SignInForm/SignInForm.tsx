@@ -19,10 +19,10 @@ export default function SignInForm() {
     resolver: yupResolver(signInSchema),
   });
 
-  const onSubmit: SubmitHandler<Values> = (data) => console.log(data);
+  const onSubmit = handleSubmit((data) => console.log(data));
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={onSubmit}>
       <label>Email</label>
       <input
         type="email"
