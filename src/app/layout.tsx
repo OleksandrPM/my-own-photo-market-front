@@ -31,7 +31,7 @@ export default function RootLayout({
       <LocalPreferencesInitializer />
       <html lang="en" suppressHydrationWarning>
         <body
-          className={`${GeistFont.className} antialiased flex flex-col min-h-svh justify-between`}
+          className={`${GeistFont.className} antialiased flex flex-col min-h-svh justify-between bg-background dark:bg-dark-background text-foreground dark:text-dark-foreground`}
         >
           <Header />
           <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
