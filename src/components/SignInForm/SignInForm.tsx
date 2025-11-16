@@ -1,49 +1,44 @@
 "use client";
 
-import { Field, Formik, FormikHelpers, Form } from "formik";
-import { signInSchema } from "lib/formik/schemas";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { signInSchema } from "lib/forms/schemas";
 
 export interface Values {
   email: string;
   password: string;
 }
 
-const initialValues: Values = {
-  email: "",
-  password: "",
-};
-
 export default function SignInForm() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Values>({
+    defaultValues: { email: "", password: "" },
+    resolver: yupResolver(signInSchema),
+  });
+
+  const onSubmit: SubmitHandler<Values> = (data) => console.log(data);
+
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={signInSchema}
-      onSubmit={(values: Values, { setSubmitting }: FormikHelpers<Values>) => {
-        setTimeout(() => {
-          alert(JSON.stringify(values, null, 2));
-          setSubmitting(false);
-        }, 500);
-      }}
-    >
-      <Form>
-        <label htmlFor="email">Email</label>
-        <Field
-          id="email"
-          name="email"
-          placeholder="john@acme.com"
-          type="email"
-        />
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <label>Email</label>
+      <input
+        type="email"
+        placeholder="email"
+        {...register("email", { required: true })}
+      />
+      <p>{errors.email?.message}</p>
+      <label>Password</label>
+      <input
+        type="text"
+        placeholder="password"
+        {...register("password", { required: true })}
+      />
+      <p>{errors.password?.message}</p>
 
-        <label htmlFor="password">Password</label>
-        <Field
-          id="password"
-          name="password"
-          placeholder="Your password"
-          type="password"
-        />
-
-        <button type="submit">Submit</button>
-      </Form>
-    </Formik>
+      <input type="submit" />
+    </form>
   );
 }
