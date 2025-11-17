@@ -1,3 +1,4 @@
+import SignUpForm from "components/SignUpForm";
 import Link from "next/link";
 
 export default function SignUpPage() {
@@ -8,6 +9,7 @@ export default function SignUpPage() {
         Already have an account? In that case, go to the{" "}
         <Link href="/user/signin">Sign In</Link> page.
       </p>
+      <SignUpForm />
     </div>
   );
 }

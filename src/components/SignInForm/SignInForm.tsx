@@ -1,10 +1,10 @@
 "use client";
 
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { signInSchema } from "lib/forms/schemas";
 
-export interface Values {
+export interface SignInValues {
   email: string;
   password: string;
 }
@@ -14,7 +14,7 @@ export default function SignInForm() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Values>({
+  } = useForm<SignInValues>({
     defaultValues: { email: "", password: "" },
     resolver: yupResolver(signInSchema),
   });

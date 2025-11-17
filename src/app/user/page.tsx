@@ -12,7 +12,7 @@ export default function UserPage() {
 
   return (
     <div className="container mx-auto">
-      <h2>User`s page, need to redirect to signin or signup</h2>
+      <h2>User&apos;s page, need to redirect to signin or signup</h2>
     </div>
   );
 }
