@@ -28,4 +28,5 @@ const localPreferencesSlice = createSlice({
 
 export const { hydratePreferences, setHideWelcome, setTheme } =
   localPreferencesSlice.actions;
+
 export default localPreferencesSlice.reducer;
