@@ -1,10 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
 import localPreferencesReducer from "./features/local-preferences/localPreferencesSlice";
 import authReducer from "./features/auth/authSlice";
+import tagsReducer from "./features/tags/tagsSlice";
 
 export const makeStore = () => {
   return configureStore({
-    reducer: { localPreferences: localPreferencesReducer, auth: authReducer },
+    reducer: {
+      localPreferences: localPreferencesReducer,
+      auth: authReducer,
+      tags: tagsReducer,
+    },
   });
 };
 
