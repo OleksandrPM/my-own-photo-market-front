@@ -4,11 +4,11 @@ import { useState } from "react";
 import clsx from "clsx";
 import { useAppSelector } from "lib/hooks/react-redux-hooks";
 import { getTags } from "lib/redux/features/tags/tagsSelectors";
-
-import styles from "./TagSearch.module.scss";
 import { searchImagesByTag } from "lib/api/imagesApi";
 
-export default function TagsSearchingInput() {
+import styles from "./TagSearch.module.scss";
+
+export default function TagSearch() {
   const tags = useAppSelector(getTags);
   const [searchTerm, setSearchTerm] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(true);
