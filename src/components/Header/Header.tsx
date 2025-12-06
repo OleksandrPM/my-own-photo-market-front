@@ -1,6 +1,6 @@
 import ThemeSwitch from "components/ThemeSwitch";
 import Logo from "../Logo";
-import TagsSearchingInput from "../TagsSearchingInput";
+import TagSearch from "../TagSearch";
 import UserBar from "../UserBar";
 
 export default function Header() {
@@ -8,7 +8,7 @@ export default function Header() {
     <header>
       <div className="container mx-auto flex justify-between">
         <Logo />
-        <TagsSearchingInput />
+        <TagSearch />
         <ThemeSwitch />
         <UserBar />
       </div>

@@ -1,0 +1,23 @@
+.tagsSearchingInput {
+  position: relative;
+  width: 250px;
+}
+
+.tagsList {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.tagItem {
+  //   padding: 8px 12px;
+  cursor: pointer;
+}
