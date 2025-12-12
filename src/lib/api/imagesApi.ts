@@ -5,11 +5,6 @@ export async function fetchImages() {
   return response.data;
 }
 
-export async function fetchImageById(imageId: string) {
-  const response = await apiClient.get(`/images/${imageId}`);
-  return response.data;
-}
-
 export async function uploadImage(imageData: FormData) {
   const response = await apiClient.post("/images", imageData, {
     headers: {
@@ -32,9 +27,14 @@ export async function updateImage(
   return response.data;
 }
 
-export async function searchImagesByTag(tag: string) {
+export async function fetchImageById(imageId: string) {
+  const response = await apiClient.get(`/images/${imageId}`);
+  return response.data;
+}
+
+export async function searchImagesByTags(tags: string[]) {
   const response = await apiClient.get(`/images/search`, {
-    params: { tag },
+    params: { tags },
   });
   return response.data;
 }
