@@ -1,21 +1,53 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Tag } from "types/tag";
-import { fetchTagsThunk } from "./tagsThunks";
+import { allTagsThunk, tagsByNameThunk } from "./tagsThunks";
+import { TagsState } from "types/tagsState";
+import { stat } from "fs";
 
-const initialState: Tag[] = [];
+const initialState: TagsState = {
+  tags: [],
+  selectedTags: [],
+  isLoading: false,
+  error: null,
+};
 
 const tagsSlice = createSlice({
   name: "tags",
   initialState,
   reducers: {
-    setTags(state, action: PayloadAction<Tag[]>) {
-      return action.payload;
+    setTags(state, action: PayloadAction<TagsState["tags"]>) {
+      state.tags = action.payload;
+    },
+    setSelectedTags(state, action: PayloadAction<TagsState["selectedTags"]>) {
+      state.selectedTags = action.payload;
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchTagsThunk.fulfilled, (_state, action) => {
-      return action.payload;
-    });
+    builder
+      .addCase(allTagsThunk.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(allTagsThunk.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+        return { ...state, tags: action.payload };
+      })
+      .addCase(allTagsThunk.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || "Failed to fetch tags";
+      })
+      .addCase(tagsByNameThunk.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(tagsByNameThunk.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+        return { ...state, tags: action.payload };
+      })
+      .addCase(tagsByNameThunk.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || "Failed to fetch tags by name";
+      });
   },
 });
 
