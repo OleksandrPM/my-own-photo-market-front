@@ -1,9 +1,12 @@
-export type UserRole = "admin" | "user";
+export enum UserRoles {
+  Admin = "admin",
+  User = "user",
+}
 
 export interface User {
   id: string | null;
-  name: string | null;
+  name?: string | null;
   email: string | null;
-  avatarURL: string | null;
-  role: UserRole | null;
+  avatarURL?: string | null;
+  role: UserRoles | null;
 }
