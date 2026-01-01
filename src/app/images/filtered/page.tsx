@@ -2,7 +2,6 @@
 
 import { use, useEffect } from "react";
 import { useAppDispatch } from "lib/hooks/react-redux-hooks";
-import { tagsByNameThunk } from "lib/redux/features/tags/tagsThunks";
 
 export default function FilteredImagesPage({
   searchParams,
