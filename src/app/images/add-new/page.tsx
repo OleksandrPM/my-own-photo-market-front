@@ -1,3 +1,5 @@
+import AddPhotoForm from "components/AddPhotoForm";
+
 export default function AddNewImagePage() {
   return (
     <div className="container mx-auto">
@@ -8,6 +10,7 @@ export default function AddNewImagePage() {
         If the user isn`t an admin, show him the alert warning message, redirect
         him to the images page
       </p>
+      <AddPhotoForm />
     </div>
   );
 }
