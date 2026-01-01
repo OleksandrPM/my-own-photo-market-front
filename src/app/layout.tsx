@@ -5,6 +5,7 @@ import StoreProvider from "components/StoreProvider";
 import Header from "components/Header";
 import Footer from "components/Footer";
 import LocalPreferencesInitializer from "components/LocalPreferencesInitializer";
+import AddNewPhotoBtn from "components/AddNewPhotoBtn";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -35,6 +36,8 @@ export default function RootLayout({
         >
           <Header />
           <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
+            {/*TODO: think about where to place this button */}
+            <AddNewPhotoBtn />
             {children}
           </main>
           <Footer />
