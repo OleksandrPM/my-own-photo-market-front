@@ -1,13 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Tag } from "types/tag";
 import { allTagsThunk, tagsByNameThunk } from "./tagsThunks";
 import { TagsState } from "types/tagsState";
-import { stat } from "fs";
 
 const initialState: TagsState = {
-  tags: [],
+  allTags: [],
   selectedTags: [],
-  isLoading: false,
+  newTags: [],
+  isTagsLoading: false,
   error: null,
 };
 
@@ -15,42 +14,57 @@ const tagsSlice = createSlice({
   name: "tags",
   initialState,
   reducers: {
-    setTags(state, action: PayloadAction<TagsState["tags"]>) {
-      state.tags = action.payload;
+    setTags(state, action: PayloadAction<TagsState["allTags"]>) {
+      state.allTags = action.payload;
     },
     setSelectedTags(state, action: PayloadAction<TagsState["selectedTags"]>) {
       state.selectedTags = action.payload;
     },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(allTagsThunk.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(allTagsThunk.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.error = null;
-        return { ...state, tags: action.payload };
-      })
-      .addCase(allTagsThunk.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.error.message || "Failed to fetch tags";
-      })
-      .addCase(tagsByNameThunk.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(tagsByNameThunk.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.error = null;
-        return { ...state, tags: action.payload };
-      })
-      .addCase(tagsByNameThunk.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.error.message || "Failed to fetch tags by name";
+    addSelectedTag(state, action: PayloadAction<string>) {
+      state.selectedTags.push(action.payload);
+    },
+    addSelectedTags(state, action: PayloadAction<string[]>) {
+      state.selectedTags = Array.from(
+        new Set([...state.selectedTags, ...action.payload])
+      );
+    },
+    toggleSelectedTag(state, action: PayloadAction<string>) {
+      const tag = action.payload;
+      if (state.selectedTags.includes(tag)) {
+        state.selectedTags = state.selectedTags.filter((t) => t !== tag);
+      } else {
+        state.selectedTags = [...state.selectedTags, tag];
+      }
+    },
+    setNewTags(state, action: PayloadAction<TagsState["newTags"]>) {
+      state.newTags = action.payload;
+    },
+    addNewTags(state, action: PayloadAction<string[]>) {
+      action.payload.forEach((tag) => {
+        if (!state.newTags.includes(tag)) {
+          state.newTags.push(tag);
+        }
       });
+    },
+    setIsLoading(state, action: PayloadAction<boolean>) {
+      state.isTagsLoading = action.payload;
+    },
+    setError(state, action: PayloadAction<string | null>) {
+      state.error = action.payload;
+    },
   },
 });
 
-export const { setTags } = tagsSlice.actions;
+export const {
+  setTags,
+  setSelectedTags,
+  addSelectedTag,
+  addSelectedTags,
+  toggleSelectedTag,
+  setNewTags,
+  addNewTags,
+  setIsLoading,
+  setError,
+} = tagsSlice.actions;
 
 export default tagsSlice.reducer;
