@@ -5,7 +5,6 @@ import { TagsState } from "types/tagsState";
 const initialState: TagsState = {
   allTags: [],
   selectedTags: [],
-  newTags: [],
   isTagsLoading: false,
   error: null,
 };
@@ -36,16 +35,6 @@ const tagsSlice = createSlice({
         state.selectedTags = [...state.selectedTags, tag];
       }
     },
-    setNewTags(state, action: PayloadAction<TagsState["newTags"]>) {
-      state.newTags = action.payload;
-    },
-    addNewTags(state, action: PayloadAction<string[]>) {
-      action.payload.forEach((tag) => {
-        if (!state.newTags.includes(tag)) {
-          state.newTags.push(tag);
-        }
-      });
-    },
     setIsLoading(state, action: PayloadAction<boolean>) {
       state.isTagsLoading = action.payload;
     },
@@ -61,8 +50,6 @@ export const {
   addSelectedTag,
   addSelectedTags,
   toggleSelectedTag,
-  setNewTags,
-  addNewTags,
   setIsLoading,
   setError,
 } = tagsSlice.actions;

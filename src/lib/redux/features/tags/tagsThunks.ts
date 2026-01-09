@@ -11,7 +11,8 @@ export const allTagsThunk = createAsyncThunk<void>(
 
     try {
       const response = await fetchTags();
-      dispatch(setTags(response));
+      const tags = response.map((tag: Tag) => tag.tag);
+      dispatch(setTags(tags));
     } catch (err) {
       dispatch(setError("Failed to fetch tags"));
     } finally {
@@ -28,7 +29,8 @@ export const tagsByNameThunk = createAsyncThunk<void, string[]>(
 
     try {
       const response = await searchTagsByName(tagNames);
-      dispatch(setTags(response));
+      const tags = response.map((tag: Tag) => tag.tag);
+      dispatch(setTags(tags));
     } catch (err) {
       dispatch(setError("Failed to search tags"));
     } finally {

@@ -1,5 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "lib/redux/store";
+import { Tag } from "types/tag";
 import { TagsState } from "types/tagsState";
 
 export const getTags = (state: RootState): TagsState["allTags"] =>
@@ -7,9 +8,6 @@ export const getTags = (state: RootState): TagsState["allTags"] =>
 
 export const getSelectedTags = (state: RootState): TagsState["selectedTags"] =>
   state.tags.selectedTags;
-
-export const getNewTags = (state: RootState): TagsState["newTags"] =>
-  state.tags.newTags;
 
 export const getTagsIsLoading = (
   state: RootState
@@ -23,7 +21,27 @@ export const getRemainingTags = createSelector(
     (state: RootState) => state.tags.allTags,
     (state: RootState) => state.tags.selectedTags,
   ],
-  (tags, selectedTags) => {
-    return tags.filter((tag) => !selectedTags.includes(tag.tag));
+  (tags, selectedTags): Tag["tag"][] => {
+    return tags.filter((tag) => !selectedTags.includes(tag));
+  }
+);
+
+export const getNewTags = createSelector(
+  [
+    (state: RootState) => state.tags.selectedTags,
+    (state: RootState) => state.tags.allTags,
+  ],
+  (selectedTags, allTags): Tag["tag"][] => {
+    return selectedTags.filter((tag) => !allTags.includes(tag));
+  }
+);
+
+export const getExistedTags = createSelector(
+  [
+    (state: RootState) => state.tags.selectedTags,
+    (state: RootState) => state.tags.allTags,
+  ],
+  (selectedTags, allTags): Tag["tag"][] => {
+    return selectedTags.filter((tag) => allTags.includes(tag));
   }
 );
