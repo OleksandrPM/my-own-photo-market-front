@@ -24,7 +24,12 @@ export function ThemeSwitch() {
   };
 
   return (
-    <select value={theme} onChange={onChangeHandler} title="theme">
+    <select
+      value={theme}
+      onChange={onChangeHandler}
+      name="themeSelector"
+      title="Select theme"
+    >
       <option value={ColorTheme.LIGHT}>Light</option>
       <option value={ColorTheme.DARK}>Dark</option>
       <option value={ColorTheme.SYSTEM}>System</option>
