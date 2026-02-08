@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "../styles/globals.css";
+import "./globals.css";
 import { GeistFont } from "fonts";
 import StoreProvider from "components/StoreProvider";
 import Header from "components/Header";
