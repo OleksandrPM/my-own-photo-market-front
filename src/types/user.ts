@@ -1,11 +1,11 @@
 export enum UserRoles {
-  Admin = "admin",
-  User = "user",
+  ADMIN = "admin",
+  USER = "user",
 }
 
 export interface User {
   id: string | null;
-  name?: string | null;
+  username?: string | null;
   email: string | null;
   avatarURL?: string | null;
   role: UserRoles | null;
