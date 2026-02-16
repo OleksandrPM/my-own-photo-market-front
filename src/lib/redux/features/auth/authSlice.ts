@@ -2,15 +2,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AuthState } from "types/authState";
 
 const initialState: AuthState = {
-  user: {
-    name: null,
-    email: null,
-    id: null,
-    avatarURL: null,
-    role: null,
-  },
+  user: null,
   accessToken: null,
-  isLoggedIn: false,
   isLoading: false,
   error: null,
 };
@@ -25,13 +18,10 @@ const authSlice = createSlice({
     setAccessToken(state, action: PayloadAction<string | null>) {
       state.accessToken = action.payload;
     },
-    setIsLoggedIn(state, action: PayloadAction<boolean>) {
-      state.isLoggedIn = action.payload;
-    },
-    setIsLoading(state, action: PayloadAction<boolean>) {
+    setIsAuthLoading(state, action: PayloadAction<boolean>) {
       state.isLoading = action.payload;
     },
-    setError(state, action: PayloadAction<string | null>) {
+    setAuthError(state, action: PayloadAction<string | null>) {
       state.error = action.payload;
     },
     resetAuthState() {
@@ -43,9 +33,8 @@ const authSlice = createSlice({
 export const {
   setUser,
   setAccessToken,
-  setIsLoggedIn,
-  setIsLoading,
-  setError,
+  setIsAuthLoading,
+  setAuthError,
   resetAuthState,
 } = authSlice.actions;
 
