@@ -10,7 +10,7 @@ export const getSelectedTags = (state: RootState): TagsState["selectedTags"] =>
   state.tags.selectedTags;
 
 export const getTagsIsLoading = (
-  state: RootState
+  state: RootState,
 ): TagsState["isTagsLoading"] => state.tags.isTagsLoading;
 
 export const getTagsError = (state: RootState): TagsState["error"] =>
@@ -21,9 +21,11 @@ export const getRemainingTags = createSelector(
     (state: RootState) => state.tags.allTags,
     (state: RootState) => state.tags.selectedTags,
   ],
-  (tags, selectedTags): Tag["tag"][] => {
-    return tags.filter((tag) => !selectedTags.includes(tag));
-  }
+  (allTags, selectedTags): Tag["name"][] => {
+    console.log(allTags);
+
+    return allTags.filter((tag) => !selectedTags.includes(tag));
+  },
 );
 
 export const getNewTags = createSelector(
@@ -31,9 +33,9 @@ export const getNewTags = createSelector(
     (state: RootState) => state.tags.selectedTags,
     (state: RootState) => state.tags.allTags,
   ],
-  (selectedTags, allTags): Tag["tag"][] => {
+  (selectedTags, allTags): Tag["name"][] => {
     return selectedTags.filter((tag) => !allTags.includes(tag));
-  }
+  },
 );
 
 export const getExistedTags = createSelector(
@@ -41,7 +43,7 @@ export const getExistedTags = createSelector(
     (state: RootState) => state.tags.selectedTags,
     (state: RootState) => state.tags.allTags,
   ],
-  (selectedTags, allTags): Tag["tag"][] => {
+  (selectedTags, allTags): Tag["name"][] => {
     return selectedTags.filter((tag) => allTags.includes(tag));
-  }
+  },
 );

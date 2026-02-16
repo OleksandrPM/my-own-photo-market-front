@@ -24,7 +24,7 @@ const tagsSlice = createSlice({
     },
     addSelectedTags(state, action: PayloadAction<string[]>) {
       state.selectedTags = Array.from(
-        new Set([...state.selectedTags, ...action.payload])
+        new Set([...state.selectedTags, ...action.payload]),
       );
     },
     toggleSelectedTag(state, action: PayloadAction<string>) {
@@ -35,7 +35,7 @@ const tagsSlice = createSlice({
         state.selectedTags = [...state.selectedTags, tag];
       }
     },
-    setIsLoading(state, action: PayloadAction<boolean>) {
+    setIsTagsLoading(state, action: PayloadAction<boolean>) {
       state.isTagsLoading = action.payload;
     },
     setError(state, action: PayloadAction<string | null>) {
@@ -50,7 +50,7 @@ export const {
   addSelectedTag,
   addSelectedTags,
   toggleSelectedTag,
-  setIsLoading,
+  setIsTagsLoading,
   setError,
 } = tagsSlice.actions;
 
