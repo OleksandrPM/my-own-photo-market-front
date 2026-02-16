@@ -4,7 +4,7 @@ import { toggleSelectedTag } from "lib/redux/features/tags/tagsSlice";
 import { Tag } from "types/tag";
 
 export interface TagsCheckboxListProps {
-  renderedTags: Tag["tag"][];
+  renderedTags: Tag["name"][];
   title?: string;
 }
 

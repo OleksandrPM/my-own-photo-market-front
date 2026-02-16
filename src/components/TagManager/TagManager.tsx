@@ -20,13 +20,13 @@ export default function TagManager() {
   const selectedTags = useAppSelector(getSelectedTags);
   const isLoading = useAppSelector(getTagsIsLoading);
   const remainingTags = useAppSelector(getRemainingTags).sort((a, b) =>
-    a.localeCompare(b)
+    a.localeCompare(b),
   );
   const newTags = useAppSelector(getNewTags);
   const existedTags = useAppSelector(getExistedTags);
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [enteredTags, setEnteredTags] = useState<Tag["tag"][]>([]);
+  const [enteredTags, setEnteredTags] = useState<Tag["name"][]>([]);
   const [lastTag, setLastTag] = useState("");
   const [renderedTags, setRenderedTags] = useState(remainingTags);
 
@@ -43,13 +43,13 @@ export default function TagManager() {
       const filtered = remainingTags.filter(
         (tag) =>
           !enteredTags.some((enteredTag) =>
-            tag.toLowerCase().includes(enteredTag.toLowerCase())
-          )
+            tag.toLowerCase().includes(enteredTag.toLowerCase()),
+          ),
       );
       setRenderedTags(filtered);
     } else {
       const filtered = remainingTags.filter((tag) =>
-        tag.toLowerCase().includes(lastTag.toLowerCase())
+        tag.toLowerCase().includes(lastTag.toLowerCase()),
       );
       setRenderedTags(filtered);
     }
@@ -63,7 +63,7 @@ export default function TagManager() {
       setEnteredTags(tagsInInput.filter(Boolean));
       setLastTag(lastTag);
     }, 300),
-    []
+    [],
   );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,7 +81,7 @@ export default function TagManager() {
 
     const tagsToAdd = enteredTags.filter(
       (tag) =>
-        !selectedTags.map((t) => t.toLowerCase()).includes(tag.toLowerCase())
+        !selectedTags.map((t) => t.toLowerCase()).includes(tag.toLowerCase()),
     );
 
     dispatch(addSelectedTags(tagsToAdd));
