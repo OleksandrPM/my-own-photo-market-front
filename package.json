@@ -7,7 +7,8 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "lint:fix": "eslint --fix"
+    "lint:fix": "eslint --fix",
+    "env:gen": "sed 's/=.*/=/' .env > .env.example"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
