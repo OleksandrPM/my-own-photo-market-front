@@ -1,4 +1,4 @@
-import { ColorTheme } from "types/colorTheme";
+import { ColorTheme } from "@/types/color-theme/color-theme.types";
 
 const attribute: string = "data-theme";
 const media: string = "(prefers-color-scheme: dark)";
@@ -10,14 +10,14 @@ export default function setThemeAttribute(mode: ColorTheme) {
     const isPrefersDark = window.matchMedia(media).matches;
     element.setAttribute(
       attribute,
-      isPrefersDark ? ColorTheme.DARK : ColorTheme.LIGHT
+      isPrefersDark ? ColorTheme.DARK : ColorTheme.LIGHT,
     );
 
     // Optional: listen for system changes
     window.matchMedia(media).addEventListener("change", (e) => {
       element.setAttribute(
         attribute,
-        e.matches ? ColorTheme.DARK : ColorTheme.LIGHT
+        e.matches ? ColorTheme.DARK : ColorTheme.LIGHT,
       );
     });
   } else {

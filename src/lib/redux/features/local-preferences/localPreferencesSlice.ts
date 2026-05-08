@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { setStorage } from "lib/localStorage/localStorage";
-import { ColorTheme } from "types/colorTheme";
-import { LocalPreferencesState } from "types/localPreferencesState";
+import { setStorage } from "@/lib/localStorage/localStorage";
+import { ColorTheme } from "@/types/color-theme/color-theme.types";
+import { LocalPreferencesState } from "@/types/local-preferences/local-preferences-state.types";
 
 const initialState: LocalPreferencesState = {
   hideWelcome: false,
