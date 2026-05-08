@@ -1,4 +1,4 @@
-import { LocalPreferencesState } from "types/localPreferencesState";
+import { LocalPreferencesState } from "@/types/local-preferences/local-preferences-state.types";
 
 export const storageKey: string = process.env.LOCAL_STORAGE_KEY || "MyOPM-app";
 
@@ -21,7 +21,7 @@ export function getStorage(): LocalPreferencesState | undefined {
 }
 
 export function setStorage(
-  settings: LocalPreferencesState
+  settings: LocalPreferencesState,
 ): LocalPreferencesState | undefined {
   if (typeof window === "undefined") return;
 
@@ -53,7 +53,7 @@ export function deleteStorage() {
 // Try do not use this function, work with state, update all the localPreferences object
 export function setStorageValue<K extends keyof LocalPreferencesState>(
   propName: K,
-  value: LocalPreferencesState[K]
+  value: LocalPreferencesState[K],
 ) {
   if (typeof window === "undefined") return;
 
@@ -71,7 +71,7 @@ export function setStorageValue<K extends keyof LocalPreferencesState>(
 
 // Do not use this function, work with state for getting data
 export function getStorageValue<K extends keyof LocalPreferencesState>(
-  propName: K
+  propName: K,
 ): string | boolean | undefined {
   if (typeof window === "undefined") return;
 
