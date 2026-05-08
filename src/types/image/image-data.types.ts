@@ -1,4 +1,4 @@
-import { Tag } from "./tag";
+import { Tag } from "../tag/tag.types";
 
 export enum Orientation {
   HORIZONTAL = "horizontal",

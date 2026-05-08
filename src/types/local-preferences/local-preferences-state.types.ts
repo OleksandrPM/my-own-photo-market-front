@@ -1,4 +1,4 @@
-import { ColorTheme } from "./colorTheme";
+import { ColorTheme } from "../color-theme/color-theme.types";
 
 export interface LocalPreferencesState {
   hideWelcome: boolean;
