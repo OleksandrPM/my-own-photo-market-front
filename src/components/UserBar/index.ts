@@ -1,3 +1,1 @@
-import UserBar from "./UserBar";
-
-export default UserBar;
+export { default } from "./UserBar";

@@ -1,29 +1,46 @@
 "use client";
 
 import Link from "next/link";
-import { useAppSelector } from "lib/hooks/react-redux-hooks";
-import {
-  getIsLoggedIn,
-  getUserEmail,
-  getUserName,
-} from "lib/redux/features/auth/authSelectors";
+import Image from "next/image";
+import { useMeQuery, useLogoutMutation } from "@/lib/api/features/authApi";
 
 export default function UserBar() {
-  const isLoggedIn = useAppSelector(getIsLoggedIn);
-  const userName = useAppSelector(getUserName);
-  const email = useAppSelector(getUserEmail);
+  const { data: authResponse, isLoading, isError } = useMeQuery();
+  const [logout] = useLogoutMutation();
 
+  if (isLoading) {
+    return <span>Loading...</span>;
+  }
+
+  // 401 Unauthorized or other errors (e.g., network issues) will be treated as not authenticated
+  if (isError || !authResponse) {
+    return (
+      <p>
+        <Link href="/user/signup">Sign Up</Link>
+        <span> / </span>
+        <Link href="/user/signin">Sign in</Link>
+      </p>
+    );
+  }
+
+  // Authenticated user view
   return (
-    <>
-      {isLoggedIn ? (
-        <h4>{userName ? (userName as string) : (email as string)}</h4>
-      ) : (
-        <p>
-          <Link href="/user/signup">Sign Up</Link>
-          <span> / </span>
-          <Link href="/user/signin">Sign in</Link>
-        </p>
+    <div className="flex items-center gap-x-1">
+      {authResponse.avatarUrl && (
+        <Image
+          className="w-8 h-8 rounded-full object-cover"
+          src={authResponse.avatarUrl}
+          alt="avatar"
+          width={32}
+          height={32}
+        />
       )}
-    </>
+
+      <h4>{authResponse.user.username ?? authResponse.user.email}</h4>
+
+      <button type="button" onClick={() => logout()}>
+        Logout
+      </button>
+    </div>
   );
 }
