@@ -1,57 +1,47 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { allTagsThunk, tagsByNameThunk } from "./tagsThunks";
-import { TagsState } from "types/tagsState";
+import { Tag, TagsState } from "@/types/tag";
 
 const initialState: TagsState = {
-  allTags: [],
   selectedTags: [],
-  isTagsLoading: false,
-  error: null,
 };
 
 const tagsSlice = createSlice({
-  name: "tags",
+  name: "tagsUI",
   initialState,
   reducers: {
-    setTags(state, action: PayloadAction<TagsState["allTags"]>) {
-      state.allTags = action.payload;
-    },
-    setSelectedTags(state, action: PayloadAction<TagsState["selectedTags"]>) {
+    setSelectedTags(state, action: PayloadAction<Tag["name"][]>) {
       state.selectedTags = action.payload;
     },
-    addSelectedTag(state, action: PayloadAction<string>) {
+
+    addSelectedTag(state, action: PayloadAction<Tag["name"]>) {
       state.selectedTags.push(action.payload);
     },
-    addSelectedTags(state, action: PayloadAction<string[]>) {
+
+    addSelectedTags(state, action: PayloadAction<Tag["name"][]>) {
       state.selectedTags = Array.from(
         new Set([...state.selectedTags, ...action.payload]),
       );
     },
-    toggleSelectedTag(state, action: PayloadAction<string>) {
-      const tag = action.payload;
-      if (state.selectedTags.includes(tag)) {
-        state.selectedTags = state.selectedTags.filter((t) => t !== tag);
-      } else {
-        state.selectedTags = [...state.selectedTags, tag];
-      }
+
+    toggleSelectedTag(state, action: PayloadAction<Tag["name"]>) {
+      const tagName = action.payload;
+      state.selectedTags = state.selectedTags.includes(tagName)
+        ? state.selectedTags.filter((name) => name !== tagName)
+        : [...state.selectedTags, tagName];
     },
-    setIsTagsLoading(state, action: PayloadAction<boolean>) {
-      state.isTagsLoading = action.payload;
-    },
-    setError(state, action: PayloadAction<string | null>) {
-      state.error = action.payload;
+
+    clearSelectedTags(state) {
+      state.selectedTags = [];
     },
   },
 });
 
 export const {
-  setTags,
   setSelectedTags,
   addSelectedTag,
   addSelectedTags,
   toggleSelectedTag,
-  setIsTagsLoading,
-  setError,
+  clearSelectedTags,
 } = tagsSlice.actions;
 
 export default tagsSlice.reducer;

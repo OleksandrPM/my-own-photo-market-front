@@ -1,49 +1,41 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { RootState } from "lib/redux/store";
-import { Tag } from "types/tag";
-import { TagsState } from "types/tagsState";
+import { tagsApi } from "@/lib/api/features/tagsApi";
+import { RootState } from "@/lib/redux/store";
+import { Tag } from "@/types/tag/tag.types";
+import { TagsState } from "@/types/tag/tags-state.types";
 
-export const getTags = (state: RootState): TagsState["allTags"] =>
-  state.tags.allTags;
+const EMPTY_TAGS: Tag[] = [];
+
+export const selectTagsResult = tagsApi.endpoints.fetchTags.select();
+
+export const getTags = (state: RootState): Tag[] =>
+  selectTagsResult(state)?.data ?? EMPTY_TAGS;
+
+export const getTagsIsLoading = (state: RootState): boolean =>
+  selectTagsResult(state)?.isLoading ?? false;
+
+export const getTagsError = (state: RootState) =>
+  selectTagsResult(state)?.error ?? null;
 
 export const getSelectedTags = (state: RootState): TagsState["selectedTags"] =>
   state.tags.selectedTags;
 
-export const getTagsIsLoading = (
-  state: RootState,
-): TagsState["isTagsLoading"] => state.tags.isTagsLoading;
-
-export const getTagsError = (state: RootState): TagsState["error"] =>
-  state.tags.error;
-
 export const getRemainingTags = createSelector(
-  [
-    (state: RootState) => state.tags.allTags,
-    (state: RootState) => state.tags.selectedTags,
-  ],
-  (allTags, selectedTags): Tag["name"][] => {
-    console.log(allTags);
-
-    return allTags.filter((tag) => !selectedTags.includes(tag));
-  },
+  [getTags, getSelectedTags],
+  (allTags, selectedTags): Tag["name"][] =>
+    allTags
+      .filter((tag) => !selectedTags.includes(tag.name))
+      .map((tag) => tag.name),
 );
 
 export const getNewTags = createSelector(
-  [
-    (state: RootState) => state.tags.selectedTags,
-    (state: RootState) => state.tags.allTags,
-  ],
-  (selectedTags, allTags): Tag["name"][] => {
-    return selectedTags.filter((tag) => !allTags.includes(tag));
-  },
+  [getTags, getSelectedTags],
+  (allTags, selectedTags): Tag["name"][] =>
+    selectedTags.filter((name) => !allTags.some((tag) => tag.name === name)),
 );
 
 export const getExistedTags = createSelector(
-  [
-    (state: RootState) => state.tags.selectedTags,
-    (state: RootState) => state.tags.allTags,
-  ],
-  (selectedTags, allTags): Tag["name"][] => {
-    return selectedTags.filter((tag) => allTags.includes(tag));
-  },
+  [getTags, getSelectedTags],
+  (allTags, selectedTags): Tag["name"][] =>
+    selectedTags.filter((name) => allTags.some((tag) => tag.name === name)),
 );
