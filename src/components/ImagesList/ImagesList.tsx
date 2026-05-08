@@ -1,5 +1,5 @@
-import ImageCard from "components/ImageCard";
-import { ImageDataResponse } from "types/imageData";
+import ImageCard from "@/components/ImageCard";
+import { ImageDataResponse } from "@/types/image/image-data.types";
 
 export interface ImagesListProps {
   images: ImageDataResponse[];

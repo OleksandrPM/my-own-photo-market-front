@@ -1,7 +1,7 @@
 "use client";
 
 import { use, useEffect } from "react";
-import { useAppDispatch } from "lib/hooks/react-redux-hooks";
+import { useAppDispatch } from "@/lib/hooks/react-redux-hooks";
 
 export default function FilteredImagesPage({
   searchParams,

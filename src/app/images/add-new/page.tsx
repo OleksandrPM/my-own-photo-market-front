@@ -1,4 +1,4 @@
-import AddPhotoForm from "components/AddPhotoForm";
+import AddPhotoForm from "@/components/AddPhotoForm";
 
 export default function AddNewImagePage() {
   return (

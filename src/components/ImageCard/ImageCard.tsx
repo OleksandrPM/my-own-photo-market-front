@@ -1,4 +1,4 @@
-import { ImageDataResponse } from "types/imageData";
+import { ImageDataResponse } from "@/types/image/image-data.types";
 
 export interface ImageCardProps {
   image: ImageDataResponse;

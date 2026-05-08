@@ -1,7 +1,7 @@
-import { useAppDispatch, useAppSelector } from "lib/hooks/react-redux-hooks";
-import { getSelectedTags } from "lib/redux/features/tags/tagsSelectors";
-import { toggleSelectedTag } from "lib/redux/features/tags/tagsSlice";
-import { Tag } from "types/tag";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks/react-redux-hooks";
+import { getSelectedTags } from "@/lib/redux/features/tags/tagsSelectors";
+import { toggleSelectedTag } from "@/lib/redux/features/tags/tagsSlice";
+import { Tag } from "@/types/tag/tag.types";
 
 export interface TagsCheckboxListProps {
   renderedTags: Tag["name"][];

@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "lib/hooks/react-redux-hooks";
-import { getTheme } from "lib/redux/features/local-preferences/localPreferencesSelectors";
-import { setTheme } from "lib/redux/features/local-preferences/localPreferencesSlice";
-import { ColorTheme } from "types/colorTheme";
-import setThemeAttribute from "lib/utils/setThemeAttribute";
-import { useSystemThemeListener } from "lib/hooks/useSystemThemeListener";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks/react-redux-hooks";
+import { useSystemThemeListener } from "@/lib/hooks/useSystemThemeListener";
+import { getTheme } from "@/lib/redux/features/local-preferences/localPreferencesSelectors";
+import { ColorTheme } from "@/types/color-theme/color-theme.types";
+import setThemeAttribute from "@/lib/utils/setThemeAttribute";
+import { setTheme } from "@/lib/redux/features/local-preferences/localPreferencesSlice";
 
 export function ThemeSwitch() {
   const theme = useAppSelector(getTheme);

@@ -2,16 +2,16 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import ThemeSwitch from "components/ThemeSwitch";
-import Logo from "components/Logo";
-import UserBar from "components/UserBar";
+import Logo from "../Logo";
+import ThemeSwitch from "../ThemeSwitch";
+import UserBar from "../UserBar";
 
 export default function Header() {
   const pathName = usePathname();
 
   return (
     <header>
-      <div className="container mx-auto flex justify-between">
+      <div className="container mx-auto flex items-center justify-between">
         <Logo />
         {pathName !== "/search" ? (
           <Link href="/search">Searching by tag</Link>
