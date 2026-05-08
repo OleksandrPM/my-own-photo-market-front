@@ -1,7 +1,4 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
+const nextConfig = {
   experimental: {
     optimizePackageImports: ["tailwindcss"],
     optimizeCss: true, // required for Tailwind v4
