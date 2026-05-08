@@ -1,8 +1,43 @@
+import { Area } from "react-easy-crop";
+
+export enum ImageMimeType {
+  JPEG = "image/jpeg",
+  PNG = "image/png",
+  WEBP = "image/webp",
+}
+
+export enum ImageExtension {
+  JPEG = "jpg",
+  PNG = "png",
+  WEBP = "webp",
+}
+
+export const MimeToExtension: Record<ImageMimeType, ImageExtension> = {
+  [ImageMimeType.JPEG]: ImageExtension.JPEG,
+  [ImageMimeType.PNG]: ImageExtension.PNG,
+  [ImageMimeType.WEBP]: ImageExtension.WEBP,
+};
+
+export function getImageMime(fileName: string): ImageMimeType | null {
+  const ext = fileName.split(".").pop()?.toLowerCase();
+  if (!ext) return null;
+
+  for (const mime in MimeToExtension) {
+    const mappedExt = MimeToExtension[mime as ImageMimeType];
+    if (mappedExt === ext) {
+      return mime as ImageMimeType;
+    }
+  }
+
+  return null;
+}
+
 export async function getCroppedImage(
   imageSrc: string,
-  crop: { x: number; y: number },
-  zoom: number,
-  croppedAreaPixels: any,
+  croppedAreaPixels: Area,
+  fileName: string = "image",
+  mimeType: ImageMimeType = ImageMimeType.JPEG,
+  quality: number = 1,
 ): Promise<File> {
   const image = new Image();
   image.src = imageSrc;
@@ -32,10 +67,14 @@ export async function getCroppedImage(
   return new Promise((resolve) => {
     canvas.toBlob(
       (blob) => {
-        resolve(new File([blob!], "avatar.jpg", { type: "image/jpeg" }));
+        const ext = MimeToExtension[mimeType];
+        const finalFile = new File([blob!], `${fileName}.${ext}`, {
+          type: mimeType,
+        });
+        resolve(finalFile);
       },
-      "image/jpeg",
-      0.7, // compression quality (0–1)
+      mimeType,
+      quality,
     );
   });
 }
