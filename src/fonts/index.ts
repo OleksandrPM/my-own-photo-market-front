@@ -1,4 +1,3 @@
-import { GeistFont } from "./Geist";
-import { GeistMonoFont } from "./GeistMono";
+import { inter } from "./inter";
 
-export { GeistFont, GeistMonoFont };
+export { inter };
