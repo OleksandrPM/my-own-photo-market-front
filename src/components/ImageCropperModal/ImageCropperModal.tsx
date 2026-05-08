@@ -1,12 +1,13 @@
-"use client";
-
 import { useState } from "react";
-import Cropper from "react-easy-crop";
-import { getCroppedImage } from "lib/utils/cropImage";
+import Cropper, { Area, Point } from "react-easy-crop";
+import { getCroppedImage, ImageMimeType } from "@/lib/utils/cropImage";
 
 export interface ImageCropperModalProps {
   isOpen: boolean;
   imageSrc: string | null;
+  imageName: string;
+  mimeType: ImageMimeType;
+  quality: number;
   onClose: () => void;
   onApply: (file: File) => void;
 }
@@ -14,16 +15,19 @@ export interface ImageCropperModalProps {
 export function ImageCropperModal({
   isOpen,
   imageSrc,
+  imageName,
+  mimeType,
+  quality,
   onClose,
   onApply,
 }: ImageCropperModalProps) {
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
 
   if (!isOpen || !imageSrc) return null;
 
-  const handleCropComplete = (_: any, area: any) => {
+  const handleCropComplete = (_: any, area: Area) => {
     setCroppedAreaPixels(area);
   };
 
@@ -32,9 +36,10 @@ export function ImageCropperModal({
 
     const croppedFile = await getCroppedImage(
       imageSrc,
-      crop,
-      zoom,
       croppedAreaPixels,
+      imageName,
+      mimeType,
+      quality,
     );
 
     onApply(croppedFile);
