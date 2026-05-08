@@ -1,3 +1,1 @@
-import AddPhotoForm from "./AddPhotoForm";
-
-export default AddPhotoForm;
+export { default } from "./AddPhotoForm";

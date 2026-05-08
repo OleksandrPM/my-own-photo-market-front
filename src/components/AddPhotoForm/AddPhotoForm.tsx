@@ -1,26 +1,25 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import * as exifr from "exifr";
+import Image from "next/image";
+import createImageData from "@/lib/utils/createImageData";
+import { ImageData } from "@/types/image/image-data.types";
+import TagManager from "@/components/TagManager";
 
 export default function ImageUploader() {
-  const [file, setFile] = useState<File | null>(null);
-  // TODO: Define proper type for fileData
-  const [fileData, setFileData] = useState<any>(null);
+  const [image, setImage] = useState<File | null>(null);
+  const [imageData, setImageData] = useState<ImageData | null>(null);
   const [isDragging, setIsDragging] = useState(false);
-
-  // del
-  console.log(fileData);
 
   const handleDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(false);
 
-    const droppedFile = e.dataTransfer.files?.[0];
+    const droppedImage = e.dataTransfer.files?.[0];
 
-    if (droppedFile) {
-      setFile(droppedFile);
-      parseXMPMetadata(droppedFile);
+    if (droppedImage) {
+      setImage(droppedImage);
+      createImageData(droppedImage).then(setImageData);
     }
   }, []);
 
@@ -36,25 +35,23 @@ export default function ImageUploader() {
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
-      setFile(selectedFile);
-      parseXMPMetadata(selectedFile);
+      setImage(selectedFile);
+      createImageData(selectedFile).then(setImageData);
     }
   };
 
-  const handleSubmit = async () => {
-    if (!file) return;
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!image) return;
 
     // Form data, send file to server, clear state, etc.
     const formData = new FormData();
-    formData.append("image", file);
-    formData.append("metadata", JSON.stringify(fileData));
+    formData.append("image", image);
+    formData.append("metadata", JSON.stringify(imageData));
 
-    // Example: Send to server (replace with actual endpoint)
+    // Send to server (replace with actual endpoint)
     // try {
-    //   const response = await fetch("/api/upload", {
-    //     method: "POST",
-    //     body: formData,
-    //   });
+    //   const response = await uploadImage(formData);
     //   if (response.ok) {
     //     console.log("Upload successful");
     //   } else {
@@ -64,26 +61,20 @@ export default function ImageUploader() {
     //   console.error("Error uploading file:", error);
     // }
 
-    setFile(null);
-  };
+    // del
+    console.log(imageData);
 
-  const parseXMPMetadata = async (file: File) => {
-    try {
-      const xmpData = await exifr.parse(file, { xmp: true });
-      // Restructure or process xmpData as needed
-      setFileData(xmpData);
-    } catch (error) {
-      console.error("Error parsing XMP metadata:", error);
-    }
+    setImage(null);
+    setImageData(null);
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10">
-      {!file ? (
-        <>
+    <form className="max-w-md mx-auto mt-10" onSubmit={handleSubmit}>
+      {!image ? (
+        <div>
           {/* Drag & Drop Zone */}
           <div
-            className={`flex flex-col items-center justify-center w-full h-40 border-2 border-dashed rounded-xl transition cursor-pointer
+            className={`flex flex-col items-center justify-center w-full h-20 border-2 border-dashed rounded-xl transition cursor-pointer
         ${
           isDragging
             ? "border-blue-500 bg-blue-50"
@@ -101,9 +92,9 @@ export default function ImageUploader() {
 
           {/* OR separator */}
           <div className="flex items-center my-4">
-            <div className="flex-grow border-t border-gray-300"></div>
+            <div className="grow border-t border-gray-300"></div>
             <span className="mx-3 text-gray-500 text-sm">or</span>
-            <div className="flex-grow border-t border-gray-300"></div>
+            <div className="grow border-t border-gray-300"></div>
           </div>
 
           {/* Add Image Button */}
@@ -121,42 +112,52 @@ export default function ImageUploader() {
             className="hidden"
             onChange={handleFileSelect}
           />
-        </>
+        </div>
       ) : (
-        <>
+        <div>
           {/* Preview */}
           <div className="mt-4">
             <p className="text-gray-700 text-sm mb-2">Selected:</p>
-            <img
-              src={URL.createObjectURL(file)}
+            <Image
+              src={URL.createObjectURL(image)}
               alt="preview"
               className="w-full rounded-lg shadow"
+              width={500}
+              height={300}
             />
-            <p>File name: {file?.name}</p>
-            <p>Created: {fileData?.CreateDate.toString()}</p>
+            <p>File name: {imageData?.name}</p>
+            <p>Created: {imageData?.creationDate?.toString()}</p>
             <p>
-              File size: {fileData?.ImageWidth} X {fileData?.ImageHeight}
+              File size: {imageData?.width} X {imageData?.height}
             </p>
-            <p>Orientation: {fileData?.Orientation}</p>
+            <p>Orientation: {imageData?.orientation}</p>
           </div>
 
-          {/* Submit Form */}
+          {/* Reducted Fields */}
 
-          <label
-            htmlFor="file-input-submit"
+          <label htmlFor="addPhotoForm-description">Description:</label>
+          <input
+            id="addPhotoForm-description"
+            type="text"
+            className="w-full p-2 border border-gray-300 rounded-lg"
+            placeholder="Enter description"
+            value={imageData?.description || ""}
+            onChange={(e) =>
+              setImageData((prev) =>
+                prev ? { ...prev, description: e.target.value } : null,
+              )
+            }
+          />
+          <TagManager />
+
+          <button
             className="block w-full py-2.5 text-center bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition cursor-pointer"
+            type="submit"
           >
             Submit
-          </label>
-
-          <input
-            id="file-input-submit"
-            type="submit"
-            className="hidden"
-            onClick={handleSubmit}
-          />
-        </>
+          </button>
+        </div>
       )}
-    </div>
+    </form>
   );
 }
