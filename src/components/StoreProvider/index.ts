@@ -1,3 +1,1 @@
-import StoreProvider from "./StoreProvider";
-
-export default StoreProvider;
+export { default } from "./StoreProvider";
