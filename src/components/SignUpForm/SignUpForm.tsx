@@ -1,24 +1,35 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { signUpSchema } from "lib/forms/schemas";
-import { SignUpFormInput } from "lib/forms/schemas/auth";
-import ImageCropperModal from "components/ImageCropperModal";
-import { useAppDispatch } from "lib/hooks/react-redux-hooks";
-import { registerThunk } from "lib/redux/features/auth/authThunks";
-import { buildFormData } from "lib/utils/buildFormData";
 import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { SignUpFormInput, signUpSchema } from "@/lib/forms/schemas";
+import ImageCropperModal from "@/components/ImageCropperModal";
+import { buildFormData } from "@/lib/utils/buildFormData";
+import { ImageMimeType } from "@/lib/utils/cropImage";
+import { useRegisterMutation } from "@/lib/api/features/authApi";
+import { extractApiMessage } from "@/lib/api/core/axiosBaseQuery/error-normalizers";
 
 export default function SignUpForm() {
-  const dispatch = useAppDispatch();
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const [
+    registerUser,
+    {
+      isLoading: isRegistering,
+      isError: isRegisterError,
+      error: registerError,
+    },
+  ] = useRegisterMutation();
+
   const [preview, setPreview] = useState<string | null>(null);
   const [isCropModalOpen, setIsCropModalOpen] = useState(false);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+
   const inputIds = {
     avatar: "regAvatar",
     username: "regUsername",
@@ -26,19 +37,38 @@ export default function SignUpForm() {
     password: "regPassword",
   };
 
+  const avatarName = "avatar";
+  const avatarMime = ImageMimeType.WEBP;
+  const avatarQuality = 0.7;
+
   const {
-    register,
+    register: formRegister,
     handleSubmit,
     watch,
     setValue,
     reset,
+    trigger,
     formState: { errors },
   } = useForm<SignUpFormInput>({
     resolver: zodResolver(signUpSchema),
+    mode: "onChange",
+    // бажано, щоб avatar існував у form state відразу
+    defaultValues: {
+      avatar: null,
+      username: "",
+      email: "",
+      password: "",
+    } as any,
   });
+
+  // ✅ ВАЖЛИВО: реєструємо кастомне поле, яке не прив’язане напряму через {...register()}
+  useEffect(() => {
+    formRegister("avatar" as any);
+  }, [formRegister]);
 
   const avatar = watch("avatar");
 
+  // preview для вже встановленого avatar (після кропу)
   useEffect(() => {
     if (avatar) {
       const url = URL.createObjectURL(avatar);
@@ -48,23 +78,54 @@ export default function SignUpForm() {
     setPreview(null);
   }, [avatar]);
 
+  // cleanup для imageSrc (яке створюється зі “сирого” файлу перед кропом)
+  useEffect(() => {
+    return () => {
+      if (imageSrc) URL.revokeObjectURL(imageSrc);
+    };
+  }, [imageSrc]);
+
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // якщо раніше вже був imageSrc — прибираємо його
+    if (imageSrc) URL.revokeObjectURL(imageSrc);
+
     const url = URL.createObjectURL(file);
     setImageSrc(url);
     setIsCropModalOpen(true);
+
+    // дає можливість вибрати той самий файл повторно
+    e.target.value = "";
   };
 
   const handleApplyCropped = (file: File) => {
-    setValue("avatar", file, { shouldValidate: true });
+    setValue("avatar" as any, file, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
     setIsCropModalOpen(false);
+
+    // cleanup imageSrc після застосування
+    if (imageSrc) URL.revokeObjectURL(imageSrc);
+    setImageSrc(null);
+  };
+
+  const handleCloseCropper = () => {
+    setIsCropModalOpen(false);
+
+    // cleanup imageSrc після закриття
+    if (imageSrc) URL.revokeObjectURL(imageSrc);
+    setImageSrc(null);
   };
 
   const handleClickAvatarButton = () => {
     if (avatar) {
-      setValue("avatar", null);
+      setValue("avatar" as any, null, {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
       if (fileInputRef.current) fileInputRef.current.value = "";
     } else {
       fileInputRef.current?.click();
@@ -72,14 +133,18 @@ export default function SignUpForm() {
   };
 
   const onSubmit = async (data: SignUpFormInput) => {
+    // якщо треба форс-валідація перед submit
+    const ok = await trigger();
+    if (!ok) return;
+
     const formData = buildFormData(data);
 
-    //  TODO: Handle errors and loading state
-    const result = await dispatch(registerThunk(formData));
-
-    if (registerThunk.fulfilled.match(result)) {
+    try {
+      await registerUser(formData).unwrap();
       reset();
       router.push("/images");
+    } catch (err) {
+      console.error("Register failed:", err);
     }
   };
 
@@ -89,8 +154,11 @@ export default function SignUpForm() {
       <ImageCropperModal
         isOpen={isCropModalOpen}
         imageSrc={imageSrc}
+        imageName={avatarName}
+        mimeType={avatarMime}
+        quality={avatarQuality}
         onApply={handleApplyCropped}
-        onClose={() => setIsCropModalOpen(false)}
+        onClose={handleCloseCropper}
       />
 
       {/* Main Form */}
@@ -133,6 +201,12 @@ export default function SignUpForm() {
             onChange={handleAvatarChange}
             className="hidden"
           />
+
+          {errors.avatar && (
+            <p className="text-red-600 text-sm mt-1">
+              {String(errors.avatar.message)}
+            </p>
+          )}
         </div>
 
         {/* Username */}
@@ -146,7 +220,7 @@ export default function SignUpForm() {
           <input
             id={inputIds.username}
             type="text"
-            {...register("username")}
+            {...formRegister("username")}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             placeholder="Enter username"
             autoComplete="username"
@@ -169,7 +243,7 @@ export default function SignUpForm() {
           <input
             id={inputIds.email}
             type="email"
-            {...register("email")}
+            {...formRegister("email")}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             placeholder="you@example.com"
             autoComplete="email"
@@ -192,7 +266,7 @@ export default function SignUpForm() {
             <input
               id={inputIds.password}
               type={showPassword ? "text" : "password"}
-              {...register("password")}
+              {...formRegister("password")}
               className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
               placeholder="Enter password"
               autoComplete="new-password"
@@ -217,10 +291,17 @@ export default function SignUpForm() {
         {/* Submit */}
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+          disabled={isRegistering}
+          className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Register
+          {isRegistering ? "Registering..." : "Register"}
         </button>
+
+        {isRegisterError && (
+          <p className="text-red-600 text-sm mt-2">
+            {extractApiMessage(registerError) ?? "Registration failed"}
+          </p>
+        )}
       </form>
     </>
   );
