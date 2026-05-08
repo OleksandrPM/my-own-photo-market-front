@@ -1,3 +1,1 @@
-import { ImageCropperModal } from "./ImageCropperModal";
-
-export default ImageCropperModal;
+export { default } from "./ImageCropperModal";

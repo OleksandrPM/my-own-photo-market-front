@@ -12,7 +12,7 @@ export interface ImageCropperModalProps {
   onApply: (file: File) => void;
 }
 
-export function ImageCropperModal({
+export default function ImageCropperModal({
   isOpen,
   imageSrc,
   imageName,
