@@ -1,37 +1,50 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { RootState } from "lib/redux/store";
-import { AuthState } from "types/authState";
-import { User } from "types/user";
+import { RootState } from "@/lib/redux/store";
+import { UserRole } from "@/types/user/user.types";
 
-export const getAuth = (state: RootState): AuthState => state.auth;
+// export const selectAuth = (state: RootState) => state.auth;
 
-export const getUser = (state: RootState): AuthState["user"] => state.auth.user;
+// const selectUser = (state: RootState) => selectAuth(state).user;
 
-export const getUserId = (state: RootState): User["id"] | null =>
-  state.auth.user?.id ?? null;
+// export const selectUserId = createSelector(
+//   selectUser,
+//   (user) => user?.id ?? null,
+// );
 
-export const getUserName = (state: RootState): User["username"] | null =>
-  state.auth.user?.username ?? null;
+// export const selectUserName = createSelector(
+//   selectUser,
+//   (user) => user?.username ?? null,
+// );
 
-export const getUserEmail = (state: RootState): User["email"] | null =>
-  state.auth.user?.email ?? null;
+// export const selectUserEmail = createSelector(
+//   selectUser,
+//   (user) => user?.email ?? null,
+// );
 
-export const getUserAvatarURL = (state: RootState): User["avatarURL"] | null =>
-  state.auth.user?.avatarURL ?? null;
+// export const selectUserIsVerified = createSelector(
+//   selectUser,
+//   (user) => user?.isVerified ?? false,
+// );
 
-export const getUserRole = (state: RootState): User["role"] | null =>
-  state.auth.user?.role ?? null;
+// export const selectUserAvatarKey = createSelector(
+//   selectUser,
+//   (user) => user?.avatarKey ?? null,
+// );
 
-export const getAccessToken = (state: RootState): AuthState["accessToken"] =>
-  state.auth.accessToken;
+// export const selectUserRole = createSelector(
+//   selectUser,
+//   (user) => user?.role ?? UserRole.GUEST,
+// );
 
-export const getIsLoading = (state: RootState): AuthState["isLoading"] =>
-  state.auth.isLoading;
+// export const selectAccessToken = (state: RootState) =>
+//   selectAuth(state).accessToken;
 
-export const getError = (state: RootState): AuthState["error"] =>
-  state.auth.error;
+// export const selectAvatarUrl = (state: RootState) =>
+//   selectAuth(state).avatarUrl;
 
-export const getIsLoggedIn = createSelector(
-  (state: RootState) => state.auth.user,
-  (user) => Boolean(user),
-);
+// export const selectIsLoading = (state: RootState) =>
+//   selectAuth(state).isLoading;
+
+// export const selectError = (state: RootState) => selectAuth(state).error;
+
+// export const selectIsLoggedIn = (state: RootState) => !!selectAuth(state).user;
