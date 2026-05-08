@@ -14,7 +14,7 @@ export const updateUserSchema = z.object({
 
   username: z.string().max(30, "Max 30 chars").optional().nullable(),
 
-  email: z.email("Invalid email").optional().nullable(),
+  email: z.string().email("Invalid email").optional().nullable(),
   password: z
     .string()
     .min(8, { message: "Must be at least 8 characters" })

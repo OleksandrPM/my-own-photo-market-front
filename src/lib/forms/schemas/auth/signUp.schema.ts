@@ -18,7 +18,7 @@ export const signUpSchema = z.object({
     .nullable()
     .transform((v) => (v === "" ? null : v)),
 
-  email: z.email("Invalid email"),
+  email: z.string().email("Invalid email"),
 
   password: z
     .string()
