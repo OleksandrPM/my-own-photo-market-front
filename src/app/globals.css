@@ -9,41 +9,44 @@
   --color-dark-foreground: #f8cdcd;
 
   /* Premium Art Market */
-  --color-black: #0d0d0d;
+  /* --color-black: #0d0d0d;
   --color-graphit: #1a1a1a;
   --color-orange-accent: #ff6b01;
-  --color-wight: #ffffff;
-  --color-dark-neutral: #353535;
+  --color-white: #ffffff;
+  --color-dark-neutral: #353535; */
 
   /* Warm Author`s Market */
-  --color-creme: #f5e7de;
+  /* --color-creme: #f5e7de;
   --color-warm-beige: #f2bfa4;
   --color-warm-grey: #8b7355;
-  --color-wight: #ffffff;
-  --color-coaly: #424242;
+  --color-white: #ffffff;
+  --color-coaly: #424242; */
 
   /* Minimalistic Gallery Style */
-  --color-wight: #ffffff;
+  /* --color-white: #ffffff;
   --color-light-grey: #f3f4f6;
   --color-grey: #9ca3af;
   --color-red-accent: #dc2626;
-  --color-black-text: #111827;
+  --color-black-text: #111827; */
 
   /* Monochrome Modern */
-  --color-primary: #ffffff;
+  /* --color-primary: #ffffff;
   --color-secondary: #9ca3af;
   --color-accent: #dc2626;
   --color-neutral: #f3f4f6;
-  --color-text: #111827;
+  --color-text: #111827; */
 
   /* Noir */
-  --color-primary: #000000;
+  /* --color-primary: #000000;
   --color-secondary: #171717;
   --color-accent: #ffffff;
   --color-neutral: #262626;
-  --color-text: #fafafa;
+  --color-text: #fafafa; */
 }
 
-.container {
-  @apply mx-auto;
+@layer components {
+  .container {
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
 }
