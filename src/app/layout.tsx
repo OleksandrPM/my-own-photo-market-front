@@ -1,21 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { GeistFont } from "fonts";
-import StoreProvider from "components/StoreProvider";
-import Header from "components/Header";
-import Footer from "components/Footer";
-import LocalPreferencesInitializer from "components/LocalPreferencesInitializer";
-import AddNewPhotoBtn from "components/AddNewPhotoBtn";
-
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// });
-
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   subsets: ["latin"],
-// });
+import { inter } from "@/fonts";
+import Providers from "./providers";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import AddNewPhotoBtn from "@/components/AddNewPhotoBtn";
 
 export const metadata: Metadata = {
   title: "My Own Photo Market",
@@ -24,25 +13,25 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <StoreProvider>
-      <LocalPreferencesInitializer />
-      <html lang="en" suppressHydrationWarning>
-        <body
-          className={`${GeistFont.className} antialiased flex flex-col min-h-svh justify-between bg-background dark:bg-dark-background text-foreground dark:text-dark-foreground`}
-        >
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${inter.className} antialiased flex flex-col min-h-svh justify-between bg-background dark:bg-dark-background text-foreground dark:text-dark-foreground`}
+      >
+        <Providers>
           <Header />
-          <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-            {/*TODO: think about where to place this button */}
+
+          <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
             <AddNewPhotoBtn />
             {children}
           </main>
+
           <Footer />
-        </body>
-      </html>
-    </StoreProvider>
+        </Providers>
+      </body>
+    </html>
   );
 }
