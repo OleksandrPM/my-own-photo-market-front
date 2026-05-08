@@ -1,18 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useAppSelector } from "lib/hooks/react-redux-hooks";
-import { UserRoles } from "types/user";
-import { getIsLoggedIn, getUser } from "lib/redux/features/auth/authSelectors";
 import { usePathname } from "next/navigation";
+import { useMeQuery } from "@/lib/api/features/authApi";
+import { UserRole } from "@/types/user/user.types";
 
 export default function AddNewPhotoBtn() {
-  const isLoggedIn = useAppSelector(getIsLoggedIn);
-  const userRole = useAppSelector(getUser).role;
+  const { data: authResponse, isLoading, isError } = useMeQuery();
   const currentPath = usePathname();
 
-  return isLoggedIn &&
-    userRole === UserRoles.Admin &&
+  return !isError &&
+    authResponse &&
+    authResponse.user.role === UserRole.ADMIN &&
     currentPath !== "/images/add-new" ? (
     <div className="w-full flex justify-center sm:justify-end px-4 sm:px-0">
       <Link
