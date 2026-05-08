@@ -3,10 +3,10 @@
 import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks/react-redux-hooks";
+import { getHideWelcome } from "@/lib/redux/features/local-preferences/localPreferencesSelectors";
+import { setHideWelcome } from "@/lib/redux/features/local-preferences/localPreferencesSlice";
 // import Image from "next/image";
-import { useAppDispatch, useAppSelector } from "lib/hooks/react-redux-hooks";
-import { setHideWelcome } from "lib/redux/features/local-preferences/localPreferencesSlice";
-import { getHideWelcome } from "lib/redux/features/local-preferences/localPreferencesSelectors";
 
 export default function HomePage() {
   const isHideWelcome = useAppSelector(getHideWelcome);
@@ -15,7 +15,7 @@ export default function HomePage() {
 
   useEffect(() => {
     // if (isHideWelcome) {
-    //   router.push("images/");
+    //   router.push("images");
     // }
   }, [isHideWelcome]);
 
@@ -24,8 +24,8 @@ export default function HomePage() {
   };
 
   return (
-    <div className="container mx-auto">
-      <h1>My Own Photo Market</h1>
+    <div className="container flex flex-col gap-4">
+      <h1 className="text-center">My Own Photo Market</h1>
       <p>
         Welcome to my app, where I’ve combined two of my passions: capturing
         meaningful moments through photography and writing code. In this app,
@@ -42,7 +42,9 @@ export default function HomePage() {
         </a>
         .
       </p>
-      <Link href={"images/"}>View Images</Link>
+      <Link href={"images/"} className="text-center">
+        View Images
+      </Link>
       <label className="flex items-center gap-2">
         <input
           type="checkbox"
