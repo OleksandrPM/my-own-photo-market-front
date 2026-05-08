@@ -18,6 +18,16 @@ export interface ImageData {
   price: number;
 }
 
+export interface CreateImageData {
+  name: string;
+  type: string;
+  description?: string | null;
+  orientation?: Orientation | null;
+  width?: number | null;
+  height?: number | null;
+  creationDate?: Date | null;
+}
+
 export interface ImageDataResponse extends ImageData {
   id: string;
   url: string;

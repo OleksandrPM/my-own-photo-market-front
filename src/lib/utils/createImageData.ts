@@ -1,38 +1,44 @@
-import { ImageData, Orientation } from "types/imageData";
+import {
+  CreateImageData,
+  ImageData,
+  Orientation,
+} from "@/types/image/image-data.types";
 import parseXMPMetadata from "./parseXMPMetadata";
 
-export default async function createImageData(image: File): Promise<ImageData> {
+export default async function createImageData(
+  image: File,
+): Promise<CreateImageData> {
   const { name, type } = image;
-  const imageData = {} as ImageData;
+
+  const imageData: CreateImageData = {
+    name,
+    type,
+  };
 
   try {
-    imageData.name = name;
-    imageData.type = type;
     const xmpData = await parseXMPMetadata(image);
 
-    if (xmpData) {
-      imageData.description = xmpData.Description || null;
-      imageData.creationDate = xmpData.CreateDate
-        ? new Date(xmpData.CreateDate)
-        : null;
+    if (!xmpData) return imageData;
 
-      const imageWidth = xmpData.ImageWidth || null;
-      const imageHeight = xmpData.ImageHeight || null;
-      const orientationValue = xmpData.Orientation || null;
-      imageData.orientation = determineOrientation(
-        imageWidth,
-        imageHeight,
-        orientationValue
-      );
+    imageData.description = xmpData.Description ?? null;
+    imageData.creationDate = xmpData.CreateDate
+      ? new Date(xmpData.CreateDate)
+      : null;
 
-      imageData.width =
-        imageData.orientation === Orientation.VERTICAL
-          ? imageHeight
-          : imageWidth;
-      imageData.height =
-        imageData.orientation === Orientation.VERTICAL
-          ? imageWidth
-          : imageHeight;
+    const width = xmpData.ImageWidth ?? null;
+    const height = xmpData.ImageHeight ?? null;
+
+    const orientation = determineOrientation(
+      width,
+      height,
+      xmpData.Orientation ?? null,
+    );
+
+    imageData.orientation = orientation;
+
+    if (orientation && width != null && height != null) {
+      imageData.width = orientation === Orientation.VERTICAL ? height : width;
+      imageData.height = orientation === Orientation.VERTICAL ? width : height;
     }
   } catch (error) {
     console.error("Error creating image data:", error);
@@ -44,9 +50,9 @@ export default async function createImageData(image: File): Promise<ImageData> {
 function determineOrientation(
   width: number | null,
   height: number | null,
-  orientationValue: string | null
+  orientationValue: string | null,
 ): Orientation | null {
-  if (width && height && orientationValue) {
+  if (width != null && height != null && orientationValue) {
     if (width === height) {
       return Orientation.SQUARE;
     }
