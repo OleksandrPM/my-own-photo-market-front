@@ -1,15 +1,17 @@
 import { configureStore } from "@reduxjs/toolkit";
 import localPreferencesReducer from "./features/local-preferences/localPreferencesSlice";
-import authReducer from "./features/auth/authSlice";
 import tagsReducer from "./features/tags/tagsSlice";
+import { api } from "@/lib/api/core/baseApi";
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       localPreferences: localPreferencesReducer,
-      auth: authReducer,
       tags: tagsReducer,
+      [api.reducerPath]: api.reducer,
     },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(api.middleware),
   });
 };
 
